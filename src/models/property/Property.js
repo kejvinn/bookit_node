@@ -14,9 +14,26 @@ class Property extends Model {
       as: 'roomType'
     });
 
+    Property.belongsTo(models.AccommodationType, {
+      foreignKey: 'accommodation_type_id',
+      as: 'accommodationType'
+    });
+
     Property.hasOne(models.PropertyStep, {
       foreignKey: 'property_id',
       as: 'steps'
+    });
+
+    Property.hasMany(models.PropertyTranslation, {
+      foreignKey: 'property_id',
+      as: 'translations'
+    });
+
+    Property.belongsToMany(models.Characteristic, {
+      through: 'characteristics_properties',
+      foreignKey: 'property_id',
+      otherKey: 'characteristic_id',
+      as: 'characteristics'
     });
   }
 
