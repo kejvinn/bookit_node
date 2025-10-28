@@ -4,13 +4,23 @@ import UserProfile from './auth/UserProfile.js';
 import Property from './property/Property.js';
 import PropertyStep from './property/PropertyStep.js';
 import RoomType from './property/Basics/RoomType.js';
+import AccommodationType from './property/Basics/AccommodationType.js';
+import Characteristic from './property/Description/Characteristic.js';
+import CharacteristicTranslation from './property/Description/CharacteristicTranslation.js';
+import CharacteristicsProperties from './property/Description/CharacteristicsProperties.js';
+import PropertyTranslation from './property/Description/PropertyTranslation.js';
 
 const models = {
   User,
   UserProfile,
   Property,
   PropertyStep,
-  RoomType
+  RoomType,
+  AccommodationType,
+  Characteristic,
+  CharacteristicTranslation,
+  CharacteristicsProperties,
+  PropertyTranslation
 };
 
 // Setup associations
@@ -28,5 +38,10 @@ export {
   UserProfile,
   Property,
   PropertyStep,
-  RoomType
+  RoomType,
+  AccommodationType,
+  Characteristic,
+  CharacteristicTranslation,
+  CharacteristicsProperties,
+  PropertyTranslation
 };

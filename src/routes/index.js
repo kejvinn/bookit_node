@@ -2,11 +2,15 @@ import { Router } from 'express';
 import authRoutes from './auth/auth.js';
 import userRoutes from './auth/user.js';
 import propertyRoutes from './property/property.js';
+import basicsRoutes from './property/basics.js';
+import descriptionRoutes from './property/description.js';
 
 const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/auth', userRoutes);
+router.use('/properties', basicsRoutes);
+router.use('/properties', descriptionRoutes);
 router.use('/properties', propertyRoutes);
 
 router.get('/health', (req, res) => {

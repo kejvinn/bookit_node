@@ -4,6 +4,10 @@ import {
   PropertyStep,
   RoomType,
   User,
+  AccommodationType,
+  Characteristic,
+  CharacteristicTranslation,
+  PropertyTranslation
 } from '../../models/index.js';
 
 class PropertyRepository extends BaseRepository {
@@ -29,7 +33,27 @@ class PropertyRepository extends BaseRepository {
           as: 'roomType',
           where: { language_id: languageId },
           required: false
-        }
+        },
+        {
+          model: AccommodationType,
+          as: 'accommodationType',
+          where: { language_id: languageId },
+          required: false
+        },
+        {
+          model: Characteristic,
+          as: 'characteristics',
+          through: { attributes: [] },
+          include: [
+            {
+              model: CharacteristicTranslation,
+              as: 'translations',
+              where: { language_id: languageId },
+              required: false,
+              attributes: ['characteristic_name']
+            }
+          ]
+        },
       ]
     });
   }
@@ -47,6 +71,12 @@ class PropertyRepository extends BaseRepository {
           model: PropertyStep,
           as: 'steps'
         },
+        {
+          model: PropertyTranslation,
+          as: 'translations',
+          where: { language_id: 1 },
+          required: false
+        }
       ],
       order: [['created', 'DESC']]
     });
