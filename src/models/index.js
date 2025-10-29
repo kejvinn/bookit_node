@@ -14,6 +14,7 @@ import State from './property/Location/State.js'
 import PropertyPicture from './property/Photos/Picture.js'
 import PropertyPrice from './property/Price/Price.js'
 import PropertySeasonalPrice from './property/Price/SeasonalPrice.js'
+import Calendar from './property/Calendar/Calendar.js'
 
 const models = {
   User,
@@ -30,7 +31,8 @@ const models = {
   State,
   PropertyPicture,
   PropertyPrice,
-  PropertySeasonalPrice
+  PropertySeasonalPrice,
+  Calendar
 }
 
 // Setup associations
@@ -58,5 +60,6 @@ export {
   State,
   PropertyPicture,
   PropertyPrice,
-  PropertySeasonalPrice
+  PropertySeasonalPrice,
+  Calendar
 }
