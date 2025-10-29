@@ -45,6 +45,11 @@ class Property extends Model {
       otherKey: 'characteristic_id',
       as: 'characteristics'
     })
+
+    Property.hasMany(models.PropertyPicture, {
+      foreignKey: 'property_id',
+      as: 'pictures'
+    })
   }
 
   isCompleted() {

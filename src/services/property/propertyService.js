@@ -1,6 +1,7 @@
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
 import { RoomType } from '../../models/index.js'
 import { AppError } from '../../utils/helpers.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class PropertyService {
   async createProperty(userId, data) {
@@ -14,7 +15,7 @@ class PropertyService {
     })
 
     if (!roomType) {
-      throw new AppError('Invalid room type', 400)
+      throw new AppError('Invalid room type', HTTP_STATUS.BAD_REQUEST)
     }
 
     const propertyData = {
@@ -37,12 +38,12 @@ class PropertyService {
     const property = await PropertyRepository.findByIdWithDetails(propertyId, languageId)
 
     if (!property || property.deleted !== null) {
-      throw new AppError('Property not found', 404)
+      throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
     }
 
     if (property.status !== 1) {
       if (!userId || property.user_id !== userId) {
-        throw new AppError('Property not found', 404)
+        throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
       }
     }
 
@@ -57,11 +58,11 @@ class PropertyService {
     const property = await PropertyRepository.findByIdWithDetails(propertyId, languageId)
 
     if (!property) {
-      throw new AppError('Property not found', 404)
+      throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
     }
 
     if (property.user_id !== userId) {
-      throw new AppError('Unauthorized', 403)
+      throw new AppError('Unauthorized', HTTP_STATUS.FORBIDDEN)
     }
 
     return property
@@ -102,15 +103,15 @@ class PropertyService {
     const property = await PropertyRepository.findById(propertyId)
 
     if (!property) {
-      throw new AppError('Property not found', 404)
+      throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
     }
 
     if (property.user_id !== userId) {
-      throw new AppError('Unauthorized', 403)
+      throw new AppError('Unauthorized', HTTP_STATUS.FORBIDDEN)
     }
 
     if (property.status !== 0) {
-      throw new AppError('Cannot delete published property', 400)
+      throw new AppError('Cannot delete published property', HTTP_STATUS.BAD_REQUEST)
     }
 
     await PropertyRepository.softDelete(propertyId)

@@ -1,6 +1,7 @@
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
 import CountryRepository from '../../repositories/property/LocationRepository.js'
 import { AppError } from '../../utils/helpers.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class LocationService {
   async updateLocation(propertyId, userId, data) {
@@ -36,17 +37,17 @@ class LocationService {
     })
 
     if (data.address && !data.city) {
-      throw new AppError('City is required when address is provided', 400)
+      throw new AppError('City is required when address is provided', HTTP_STATUS.BAD_REQUEST)
     }
 
     if (data.address && !data.country_id && !data.country) {
-      throw new AppError('Country is required when address is provided', 400)
+      throw new AppError('Country is required when address is provided', HTTP_STATUS.BAD_REQUEST)
     }
 
     if (data.country_id) {
       const country = await CountryRepository.getById(data.country_id)
       if (!country) {
-        throw new AppError('Invalid country', 400)
+        throw new AppError('Invalid country', HTTP_STATUS.BAD_REQUEST)
       }
       updateData.country = country.name
     }
@@ -54,7 +55,7 @@ class LocationService {
     if (data.state_id) {
       const state = await CountryRepository.getStateById(data.state_id)
       if (!state) {
-        throw new AppError('Invalid state', 400)
+        throw new AppError('Invalid state', HTTP_STATUS.BAD_REQUEST)
       }
       updateData.state_province = state.name
     }
@@ -62,7 +63,7 @@ class LocationService {
     const updatedProperty = await PropertyRepository.updateStep(propertyId, userId, 'location', updateData)
 
     if (!updatedProperty) {
-      throw new AppError('Failed to update property', 500)
+      throw new AppError('Failed to update property', HTTP_STATUS.INTERNAL_SERVER_ERROR)
     }
 
     return updatedProperty

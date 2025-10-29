@@ -1,6 +1,7 @@
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
 import { RoomType, AccommodationType } from '../../models/index.js'
 import { AppError } from '../../utils/helpers.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class BasicsService {
   async updateBasics(propertyId, userId, data) {
@@ -21,11 +22,11 @@ class BasicsService {
     })
 
     if (updateData.capacity !== undefined && updateData.capacity < 1) {
-      throw new AppError('Capacity must be at least 1', 400)
+      throw new AppError('Capacity must be at least 1', HTTP_STATUS.BAD_REQUEST)
     }
 
     if (updateData.bed_number !== undefined && updateData.bed_number < 1) {
-      throw new AppError('Bed number must be at least 1', 400)
+      throw new AppError('Bed number must be at least 1', HTTP_STATUS.BAD_REQUEST)
     }
 
     if (updateData.accommodation_type_id) {
@@ -37,14 +38,14 @@ class BasicsService {
       })
 
       if (!accommodationType) {
-        throw new AppError('Invalid accommodation type', 400)
+        throw new AppError('Invalid accommodation type', HTTP_STATUS.BAD_REQUEST)
       }
     }
 
     const property = await PropertyRepository.updateStep(propertyId, userId, 'basics', updateData)
 
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     return property

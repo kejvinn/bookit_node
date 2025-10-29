@@ -10,3 +10,12 @@ export const HTTP_STATUS = {
 }
 
 export const GENDER_OPTIONS = ['male', 'female', 'other']
+
+export const UPLOAD_LIMITS = {
+  MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_FILES_PER_UPLOAD: 10,
+  MAX_PHOTOS_PER_PROPERTY: 50,
+  MIN_PHOTOS_REQUIRED: 5
+}
+
+export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
