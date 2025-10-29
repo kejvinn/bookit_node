@@ -1,54 +1,46 @@
-import { BaseRepository } from '../BaseRepository.js';
-import { Country, State } from '../../models/index.js';
+import { BaseRepository } from '../BaseRepository.js'
+import { Country, State } from '../../models/index.js'
 
 class LocationRepository extends BaseRepository {
   constructor() {
-    super(Country);
+    super(Country)
   }
 
   async getAllActive() {
     return await Country.findAll({
       where: { status: 1 },
-      attributes: [
-        'id', 
-        'name', 
-        'iso_code', 
-        'phonecode', 
-        'contains_states',
-        'need_zip_code',
-        'zip_code_format'
-      ],
+      attributes: ['id', 'name', 'iso_code', 'phonecode', 'contains_states', 'need_zip_code', 'zip_code_format'],
       order: [['name', 'ASC']]
-    });
+    })
   }
 
   async getById(id) {
     return await Country.findOne({
-      where: { 
+      where: {
         id,
         status: 1
       }
-    });
+    })
   }
 
   async getByIsoCode(isoCode) {
     return await Country.findOne({
-      where: { 
+      where: {
         iso_code: isoCode.toUpperCase(),
         status: 1
       }
-    });
+    })
   }
 
   async getStates(countryId) {
     return await State.findAll({
-      where: { 
+      where: {
         country_id: countryId,
         status: 1
       },
       attributes: ['id', 'name', 'iso_code'],
       order: [['name', 'ASC']]
-    });
+    })
   }
 
   async getStateById(stateId) {
@@ -57,8 +49,8 @@ class LocationRepository extends BaseRepository {
         id: stateId,
         status: 1
       }
-    });
+    })
   }
 }
 
-export default new LocationRepository();
+export default new LocationRepository()

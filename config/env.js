@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 export const config = {
   port: process.env.PORT || 3000,
@@ -9,11 +9,11 @@ export const config = {
     host: process.env.DB_HOST || 'localhost',
     port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD ,
+    password: process.env.DB_PASSWORD,
     name: process.env.DB_NAME
   },
   jwt: {
-    secret: process.env.JWT_SECRET ,
+    secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN || '30m',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d'
   },
@@ -27,4 +27,4 @@ export const config = {
     url: process.env.APP_URL || 'http://localhost:3000',
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4200'
   }
-};
+}

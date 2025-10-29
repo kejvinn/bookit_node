@@ -1,20 +1,20 @@
-import PropertyRepository from '../../repositories/property/PropertyRepository.js';
-import { RoomType } from '../../models/index.js';
-import { AppError } from '../../utils/helpers.js';
+import PropertyRepository from '../../repositories/property/PropertyRepository.js'
+import { RoomType } from '../../models/index.js'
+import { AppError } from '../../utils/helpers.js'
 
 class PropertyService {
   async createProperty(userId, data) {
-    const { room_type_id } = data;
+    const { room_type_id } = data
 
     const roomType = await RoomType.findOne({
-      where: { 
+      where: {
         room_type_id,
-        language_id: 1 
+        language_id: 1
       }
-    });
+    })
 
     if (!roomType) {
-      throw new AppError('Invalid room type', 400);
+      throw new AppError('Invalid room type', 400)
     }
 
     const propertyData = {
@@ -22,68 +22,65 @@ class PropertyService {
       status: 0,
       is_completed: 0,
       is_approved: 0
-    };
+    }
 
-    const property = await PropertyRepository.createWithSteps(propertyData, userId);
+    const property = await PropertyRepository.createWithSteps(propertyData, userId)
 
     return {
       id: property.id,
       room_type_id: property.room_type_id,
       created: property.created
-    };
+    }
   }
 
   async getProperty(propertyId, userId = null, languageId = 1) {
-    const property = await PropertyRepository.findByIdWithDetails(
-      propertyId,
-      languageId
-    );
+    const property = await PropertyRepository.findByIdWithDetails(propertyId, languageId)
 
     if (!property || property.deleted !== null) {
-      throw new AppError('Property not found', 404);
+      throw new AppError('Property not found', 404)
     }
 
     if (property.status !== 1) {
       if (!userId || property.user_id !== userId) {
-        throw new AppError('Property not found', 404);
+        throw new AppError('Property not found', 404)
       }
     }
 
-    return property;
+    return property
   }
 
   async getUserProperties(userId) {
-    return await PropertyRepository.findByUserId(userId);
+    return await PropertyRepository.findByUserId(userId)
   }
 
   async getPropertyForEdit(propertyId, userId, languageId = 1) {
-    const property = await PropertyRepository.findByIdWithDetails(propertyId, languageId);
+    const property = await PropertyRepository.findByIdWithDetails(propertyId, languageId)
 
     if (!property) {
-      throw new AppError('Property not found', 404);
+      throw new AppError('Property not found', 404)
     }
 
     if (property.user_id !== userId) {
-      throw new AppError('Unauthorized', 403);
+      throw new AppError('Unauthorized', 403)
     }
 
-    return property;
+    return property
   }
-  
+
   async getPropertyProgress(propertyId, userId) {
-    const property = await this.getPropertyForEdit(propertyId, userId);
-    
+    const property = await this.getPropertyForEdit(propertyId, userId)
+
     if (!property.steps) {
       return {
         completed: 0,
         total: 6,
         percentage: 0,
         steps: {}
-      };
+      }
     }
 
-    const completedSteps = property.steps.getCompletedSteps();
-    const percentage = property.steps.getProgress();
+    const completedSteps = property.steps.getCompletedSteps()
+    const percentage = property.steps.getProgress()
 
     return {
       completed: completedSteps.length,
@@ -98,29 +95,28 @@ class PropertyService {
         calendar: property.steps.calendar === 1
       },
       isComplete: property.steps.isComplete()
-    };
+    }
   }
 
   async deleteProperty(propertyId, userId) {
-    const property = await PropertyRepository.findById(propertyId);
+    const property = await PropertyRepository.findById(propertyId)
 
     if (!property) {
-      throw new AppError('Property not found', 404);
+      throw new AppError('Property not found', 404)
     }
 
     if (property.user_id !== userId) {
-      throw new AppError('Unauthorized', 403);
+      throw new AppError('Unauthorized', 403)
     }
 
     if (property.status !== 0) {
-      throw new AppError('Cannot delete published property', 400);
+      throw new AppError('Cannot delete published property', 400)
     }
 
-    await PropertyRepository.softDelete(propertyId);
+    await PropertyRepository.softDelete(propertyId)
 
-    return { id: propertyId, deleted: true };
+    return { id: propertyId, deleted: true }
   }
-
 }
 
-export default new PropertyService();
+export default new PropertyService()
