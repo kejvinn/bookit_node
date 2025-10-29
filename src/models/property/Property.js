@@ -19,6 +19,16 @@ class Property extends Model {
       as: 'accommodationType'
     });
 
+    Property.belongsTo(models.Country, {
+      foreignKey: 'country_id',
+      as: 'countryData'
+    });
+
+    Property.belongsTo(models.State, {
+      foreignKey: 'state_id',
+      as: 'stateData'
+    });
+
     Property.hasOne(models.PropertyStep, {
       foreignKey: 'property_id',
       as: 'steps'

@@ -7,7 +7,9 @@ import {
   AccommodationType,
   Characteristic,
   CharacteristicTranslation,
-  PropertyTranslation
+  PropertyTranslation,
+  Country,
+  State
 } from '../../models/index.js';
 
 class PropertyRepository extends BaseRepository {
@@ -39,6 +41,18 @@ class PropertyRepository extends BaseRepository {
           as: 'accommodationType',
           where: { language_id: languageId },
           required: false
+        },
+        {
+          model: Country,
+          as: 'countryData',
+          required: false,
+          attributes: ['id', 'name', 'iso_code', 'phonecode']
+        },
+        {
+          model: State,
+          as: 'stateData',
+          required: false,
+          attributes: ['id', 'name', 'iso_code']
         },
         {
           model: Characteristic,
