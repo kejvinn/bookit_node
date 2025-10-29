@@ -6,6 +6,7 @@ import basicsRoutes from './property/basics.js'
 import locationRoutes from './property/location.js'
 import descriptionRoutes from './property/description.js'
 import photosRoutes from './property/photos.js'
+import priceRoutes from './property/price.js'
 
 const router = Router()
 
@@ -15,6 +16,7 @@ router.use('/properties', basicsRoutes)
 router.use('/properties', locationRoutes)
 router.use('/properties', descriptionRoutes)
 router.use('/properties', photosRoutes)
+router.use('/properties', priceRoutes)
 router.use('/properties', propertyRoutes)
 
 router.get('/health', (req, res) => {

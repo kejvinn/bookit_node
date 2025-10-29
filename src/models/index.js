@@ -12,6 +12,8 @@ import PropertyTranslation from './property/Description/PropertyTranslation.js'
 import Country from './property/Location/Country.js'
 import State from './property/Location/State.js'
 import PropertyPicture from './property/Photos/Picture.js'
+import PropertyPrice from './property/Price/Price.js'
+import PropertySeasonalPrice from './property/Price/SeasonalPrice.js'
 
 const models = {
   User,
@@ -26,7 +28,9 @@ const models = {
   PropertyTranslation,
   Country,
   State,
-  PropertyPicture
+  PropertyPicture,
+  PropertyPrice,
+  PropertySeasonalPrice
 }
 
 // Setup associations
@@ -52,5 +56,7 @@ export {
   PropertyTranslation,
   Country,
   State,
-  PropertyPicture
+  PropertyPicture,
+  PropertyPrice,
+  PropertySeasonalPrice
 }

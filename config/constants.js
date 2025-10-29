@@ -19,3 +19,11 @@ export const UPLOAD_LIMITS = {
 }
 
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+
+export const PRICING_LIMITS = {
+  MIN_NIGHTLY_PRICE: 1,
+  MAX_NIGHTLY_PRICE: 100000,
+  MAX_WEEKLY_DISCOUNT: 100,
+  MAX_MONTHLY_DISCOUNT: 100,
+  DEFAULT_CURRENCY: 'EUR'
+}
