@@ -9,6 +9,8 @@ import Characteristic from './property/Description/Characteristic.js';
 import CharacteristicTranslation from './property/Description/CharacteristicTranslation.js';
 import CharacteristicsProperties from './property/Description/CharacteristicsProperties.js';
 import PropertyTranslation from './property/Description/PropertyTranslation.js';
+import Country from './property/Location/Country.js';
+import State from './property/Location/State.js';
 
 const models = {
   User,
@@ -20,7 +22,9 @@ const models = {
   Characteristic,
   CharacteristicTranslation,
   CharacteristicsProperties,
-  PropertyTranslation
+  PropertyTranslation,
+  Country,
+  State
 };
 
 // Setup associations
@@ -43,5 +47,7 @@ export {
   Characteristic,
   CharacteristicTranslation,
   CharacteristicsProperties,
-  PropertyTranslation
+  PropertyTranslation,
+  Country,
+  State 
 };
