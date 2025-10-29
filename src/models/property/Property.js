@@ -50,6 +50,20 @@ class Property extends Model {
       foreignKey: 'property_id',
       as: 'pictures'
     })
+
+    Property.hasOne(models.PropertyPrice, {
+      foreignKey: 'model_id',
+      constraints: false,
+      scope: {
+        model: 'Property'
+      },
+      as: 'pricing'
+    })
+
+    Property.hasMany(models.PropertySeasonalPrice, {
+      foreignKey: 'property_id',
+      as: 'seasonalPrices'
+    })
   }
 
   isCompleted() {
