@@ -11,6 +11,7 @@ import CharacteristicsProperties from './property/Description/CharacteristicsPro
 import PropertyTranslation from './property/Description/PropertyTranslation.js'
 import Country from './property/Location/Country.js'
 import State from './property/Location/State.js'
+import PropertyPicture from './property/Photos/Picture.js'
 
 const models = {
   User,
@@ -24,7 +25,8 @@ const models = {
   CharacteristicsProperties,
   PropertyTranslation,
   Country,
-  State
+  State,
+  PropertyPicture
 }
 
 // Setup associations
@@ -49,5 +51,6 @@ export {
   CharacteristicsProperties,
   PropertyTranslation,
   Country,
-  State
+  State,
+  PropertyPicture
 }

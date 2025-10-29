@@ -2,6 +2,7 @@ import PropertyRepository from '../../repositories/property/PropertyRepository.j
 import PropertyTranslationRepository from '../../repositories/property/PropertyTranslationRepository.js'
 import CharacteristicRepository from '../../repositories/property/CharacteristicRepository.js'
 import { AppError } from '../../utils/helpers.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class DescriptionService {
   async updateAmenities(propertyId, userId, characteristicIds) {
@@ -12,14 +13,14 @@ class DescriptionService {
     })
 
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     // Validate IDs
     if (Array.isArray(characteristicIds) && characteristicIds.length > 0) {
       const isValid = await CharacteristicRepository.validateCharacteristicIds(characteristicIds)
       if (!isValid) {
-        throw new AppError('Invalid characteristic IDs provided', 400)
+        throw new AppError('Invalid characteristic IDs provided', HTTP_STATUS.BAD_REQUEST)
       }
     }
 
@@ -38,7 +39,7 @@ class DescriptionService {
     })
 
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     const allowedFields = [
@@ -81,7 +82,7 @@ class DescriptionService {
     })
 
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     return await PropertyTranslationRepository.findAllByProperty(propertyId)

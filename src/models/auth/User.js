@@ -9,6 +9,16 @@ class User extends Model {
       foreignKey: 'user_id',
       as: 'profile'
     })
+
+    User.hasMany(models.Property, {
+      foreignKey: 'user_id',
+      as: 'properties'
+    })
+
+    User.hasMany(models.PropertyPicture, {
+      foreignKey: 'user_id',
+      as: 'uploadedPictures'
+    })
   }
 
   async comparePassword(candidatePassword) {
