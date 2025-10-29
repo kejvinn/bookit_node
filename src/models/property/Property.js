@@ -64,6 +64,11 @@ class Property extends Model {
       foreignKey: 'property_id',
       as: 'seasonalPrices'
     })
+
+    Property.hasOne(models.Calendar, {
+      foreignKey: 'property_id',
+      as: 'calendar'
+    })
   }
 
   isCompleted() {

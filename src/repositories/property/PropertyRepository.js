@@ -9,7 +9,8 @@ import {
   CharacteristicTranslation,
   PropertyTranslation,
   Country,
-  State
+  State,
+  PropertyPrice
 } from '../../models/index.js'
 
 class PropertyRepository extends BaseRepository {
@@ -67,6 +68,11 @@ class PropertyRepository extends BaseRepository {
               attributes: ['characteristic_name']
             }
           ]
+        },
+        {
+          model: PropertyPrice,
+          as: 'pricing',
+          required: false
         }
       ]
     })

@@ -27,3 +27,9 @@ export const PRICING_LIMITS = {
   MAX_MONTHLY_DISCOUNT: 100,
   DEFAULT_CURRENCY: 'EUR'
 }
+
+export const AVAILABILITY_TYPES = {
+  ALWAYS: 'always',
+  SOMETIMES: 'sometimes',
+  ONE_TIME: 'one_time'
+}
