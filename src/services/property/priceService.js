@@ -3,6 +3,7 @@ import PropertyRepository from '../../repositories/property/PropertyRepository.j
 import { pricingUtils } from '../../utils/pricingUtils.js'
 import { AppError } from '../../utils/helpers.js'
 import { PRICING_LIMITS } from '../../../config/constants.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class PriceService {
   async updatePricing(propertyId, userId, data) {
@@ -12,7 +13,7 @@ class PriceService {
       deleted: null
     })
 
-    if (!property) throw new AppError('Property not found or unauthorized', 404)
+    if (!property) throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
 
     const nightlyPrice = Number(data.night)
     const weeklyDiscount = data.weekly_discount || 0
@@ -57,12 +58,12 @@ class PriceService {
       deleted: null
     })
     if (!property) {
-      throw new AppError('Property not found', 404)
+      throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
     }
 
     if (property.status === 0 || property.deleted) {
       if (!userId || property.user_id !== userId) {
-        throw new AppError('Property not found', 404)
+        throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
       }
     }
 
@@ -91,7 +92,7 @@ class PriceService {
       deleted: null
     })
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     await PriceRepository.deletePropertyPrice(propertyId)

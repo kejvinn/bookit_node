@@ -2,6 +2,7 @@ import { AVAILABILITY_TYPES } from '../../../config/constants.js'
 import CalendarRepository from '../../repositories/property/CalendarRepository.js'
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
 import { AppError } from '../../utils/helpers.js'
+import { HTTP_STATUS } from '../../../config/constants.js'
 
 class CalendarService {
   async updateCalendar(propertyId, userId, data) {
@@ -11,17 +12,17 @@ class CalendarService {
       deleted: null
     })
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     const minDays = data.minimum_days || property.minimum_days || 1
     const maxDays = data.maximum_days || property.maximum_days || 365
 
     if (minDays < 1) {
-      throw new AppError('Minimum days must be at least 1', 400)
+      throw new AppError('Minimum days must be at least 1', HTTP_STATUS.BAD_REQUEST)
     }
     if (maxDays < minDays) {
-      throw new AppError('Maximum days must be greater than or equal to minimum days', 400)
+      throw new AppError('Maximum days must be greater than or equal to minimum days', HTTP_STATUS.BAD_REQUEST)
     }
 
     if (data.available_from && data.available_to) {
@@ -29,7 +30,7 @@ class CalendarService {
       const toDate = new Date(data.available_to)
 
       if (toDate <= fromDate) {
-        throw new AppError('Available to date must be after available from date', 400)
+        throw new AppError('Available to date must be after available from date', HTTP_STATUS.BAD_REQUEST)
       }
     }
 
@@ -74,10 +75,10 @@ class CalendarService {
       id: propertyId,
       deleted: null
     })
-    if (!property) throw new AppError('Property not found', 404)
+    if (!property) throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
 
     if (property.status === 0 && (!userId || userId !== property.user_id)) {
-      throw new AppError('Property not found', 404)
+      throw new AppError('Property not found', HTTP_STATUS.NOT_FOUND)
     }
 
     const calendar = await CalendarRepository.findByPropertyId(propertyId)
@@ -100,7 +101,7 @@ class CalendarService {
       deleted: null
     })
     if (!property) {
-      throw new AppError('Property not found or unauthorized', 404)
+      throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
     }
 
     await CalendarRepository.deleteByPropertyId(propertyId)
@@ -126,7 +127,7 @@ class CalendarService {
       user_id: userId,
       deleted: null
     })
-    if (!property) throw new AppError('Property not found or unauthorized', 404)
+    if (!property) throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
 
     let calendar = await CalendarRepository.findByPropertyId(propertyId)
 
@@ -161,7 +162,7 @@ class CalendarService {
       user_id: userId,
       deleted: null
     })
-    if (!property) throw new AppError('Property not found or unauthorized', 404)
+    if (!property) throw new AppError('Property not found or unauthorized', HTTP_STATUS.NOT_FOUND)
 
     const calendar = await CalendarRepository.findByPropertyId(propertyId)
     if (!calendar) {
