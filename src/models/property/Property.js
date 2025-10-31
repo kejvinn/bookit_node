@@ -69,6 +69,11 @@ class Property extends Model {
       foreignKey: 'property_id',
       as: 'calendar'
     })
+
+    Property.hasMany(models.Reservation, {
+      foreignKey: 'property_id',
+      as: 'reservations'
+    })
   }
 
   isCompleted() {
