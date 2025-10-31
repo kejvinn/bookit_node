@@ -1,9 +1,10 @@
 import PriceRepository from '../../repositories/property/PriceRepository.js'
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
-import { pricingUtils } from '../../utils/pricingUtils.js'
+import { pricingUtils } from '../../utils/property/pricingUtils.js'
 import { AppError } from '../../utils/helpers.js'
 import { PRICING_LIMITS } from '../../../config/constants.js'
 import { HTTP_STATUS } from '../../../config/constants.js'
+import { calculateNights } from '../../utils/reservation/dateUtils.js'
 
 class PriceService {
   async updatePricing(propertyId, userId, data) {
@@ -108,6 +109,75 @@ class PriceService {
     })
 
     return { message: 'Pricing deleted successfully' }
+  }
+
+  async calculateReservationPricing(propertyId, guests, checkin, checkout) {
+    const price = await PriceRepository.findByModel(propertyId, 'Property')
+
+    if (!price) {
+      throw new AppError('Property pricing not configured', HTTP_STATUS.BAD_REQUEST)
+    }
+
+    const nights = calculateNights(checkin, checkout)
+    let nightlyRate = price.night || 0
+    let subtotal = 0
+
+    // Calculate subtotal based on duration
+    if (nights >= 30 && price.month) {
+      const fullMonths = Math.floor(nights / 30)
+      let remaining = nights % 30
+
+      const fullWeeks = Math.floor(remaining / 7)
+      const leftoverNights = remaining % 7
+
+      subtotal =
+        price.month * fullMonths +
+        (price.week ? price.week * fullWeeks : nightlyRate * fullWeeks * 7) +
+        nightlyRate * leftoverNights
+    } else if (nights >= 7 && price.week) {
+      const fullWeeks = Math.floor(nights / 7)
+      const remainingNights = nights % 7
+      subtotal = price.week * fullWeeks + nightlyRate * remainingNights
+    } else {
+      subtotal = nightlyRate * nights
+    }
+
+    // Extra guest fee
+    let extraGuestPrice = 0
+    const includedGuests = price.guests || 1
+
+    if (guests > includedGuests && price.addguests) {
+      const extraGuests = guests - includedGuests
+      extraGuestPrice = extraGuests * price.addguests * nights
+    }
+
+    // One-time fees
+    const cleaningFee = price.cleaning || 0
+    const securityFee = price.security_deposit || 0
+
+    // Service fee (10% platform commission)
+    const serviceFeeRate = 0.1
+    const serviceFee = Math.round((subtotal + extraGuestPrice) * serviceFeeRate * 100) / 100
+
+    // Totals
+    const totalPrice = subtotal + extraGuestPrice + cleaningFee + serviceFee
+    const averagePrice = Math.round((totalPrice / nights) * 100) / 100
+
+    return {
+      pricing: {
+        price: nightlyRate,
+        subtotal_price: subtotal,
+        cleaning_fee: cleaningFee,
+        security_fee: securityFee,
+        service_fee: serviceFee,
+        extra_guest_price: extraGuestPrice,
+        avarage_price: averagePrice,
+        total_price: totalPrice,
+        to_pay: totalPrice
+      },
+      currency: price.currency || PRICING_LIMITS.DEFAULT_CURRENCY,
+      nights
+    }
   }
 }
 

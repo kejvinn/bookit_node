@@ -19,6 +19,18 @@ class User extends Model {
       foreignKey: 'user_id',
       as: 'uploadedPictures'
     })
+
+    // As a guest
+    User.hasMany(models.Reservation, {
+      foreignKey: 'user_by',
+      as: 'guest_reservations'
+    })
+
+    // As a host
+    User.hasMany(models.Reservation, {
+      foreignKey: 'user_to',
+      as: 'host_reservations'
+    })
   }
 
   async comparePassword(candidatePassword) {

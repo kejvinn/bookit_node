@@ -9,6 +9,8 @@ import photosRoutes from './property/photos.js'
 import priceRoutes from './property/price.js'
 import calendarRoutes from './property/calendar.js'
 import publishRoutes from './property/publish.js'
+import reservationRoutes from './reservation/reservation.js'
+import instantBookingRoutes from './reservation/instantBooking.js'
 
 const router = Router()
 
@@ -22,6 +24,8 @@ router.use('/properties', priceRoutes)
 router.use('/properties', calendarRoutes)
 router.use('/properties', publishRoutes)
 router.use('/properties', propertyRoutes)
+router.use('/reservations', instantBookingRoutes)
+router.use('/reservations', reservationRoutes)
 
 router.get('/health', (req, res) => {
   res.json({
