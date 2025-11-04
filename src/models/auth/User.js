@@ -31,6 +31,11 @@ class User extends Model {
       foreignKey: 'user_to',
       as: 'host_reservations'
     })
+
+    User.hasMany(models.Coupon, {
+      foreignKey: 'user_id',
+      as: 'created_coupons'
+    })
   }
 
   async comparePassword(candidatePassword) {
