@@ -6,6 +6,7 @@ import ReservationValidationService from './reservationValidationService.js'
 import { AppError } from '../../utils/helpers.js'
 import { HTTP_STATUS } from '../../../config/constants.js'
 import { getDateRange } from '../../utils/reservation/dateUtils.js'
+import CouponService from '../coupon/couponService.js'
 
 class ReservationService {
   async createReservation(userId, propertyId, data) {
@@ -26,11 +27,12 @@ class ReservationService {
 
     await ReservationValidationService.validateReservationAvailability(propertyId, data.checkin, data.checkout)
 
-    const { pricing, currency } = await PriceService.calculateReservationPricing(
+    const { pricing, currency, coupon } = await PriceService.calculateReservationPricing(
       propertyId,
       data.guests,
       data.checkin,
-      data.checkout
+      data.checkout,
+      data.coupon_code || null
     )
 
     const reservationStatus = property.allow_instant_booking ? 'confirmed' : 'awaiting_host_approval'
@@ -49,6 +51,10 @@ class ReservationService {
       currency,
       reservation_status: reservationStatus,
       payment_method: 'pending',
+      coupon_id: coupon?.couponId || null,
+      coupon_code: coupon?.couponCode || null,
+      discount_amount: coupon?.discountAmount || 0,
+      discount_type: coupon?.discountType || null,
       ...pricing,
       book_date: new Date(),
       is_payed: false,
@@ -56,7 +62,10 @@ class ReservationService {
       is_payed_guest: false
     })
 
-    // Block dates if instant booking
+    if (coupon) {
+      await CouponService.incrementUsage(coupon.couponId)
+    }
+
     if (reservationStatus === 'confirmed') {
       const dates = getDateRange(data.checkin, data.checkout)
       await CalendarService.blockDates(propertyId, property.user_id, dates)

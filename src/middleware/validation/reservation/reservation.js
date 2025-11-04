@@ -19,7 +19,8 @@ const createReservationSchema = Joi.object({
   }),
   message: Joi.string().max(500).optional().messages({
     'string.max': 'Message cannot exceed 500 characters'
-  })
+  }),
+  coupon_code: Joi.string().max(15).uppercase().optional()
 })
 
 const cancelReservationSchema = Joi.object({

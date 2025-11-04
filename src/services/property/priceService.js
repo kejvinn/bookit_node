@@ -5,6 +5,7 @@ import { AppError } from '../../utils/helpers.js'
 import { PRICING_LIMITS } from '../../../config/constants.js'
 import { HTTP_STATUS } from '../../../config/constants.js'
 import { calculateNights } from '../../utils/reservation/dateUtils.js'
+import CouponService from '../coupon/couponService.js'
 
 class PriceService {
   async updatePricing(propertyId, userId, data) {
@@ -111,7 +112,7 @@ class PriceService {
     return { message: 'Pricing deleted successfully' }
   }
 
-  async calculateReservationPricing(propertyId, guests, checkin, checkout) {
+  async calculateReservationPricing(propertyId, guests, checkin, checkout, couponCode = null) {
     const price = await PriceRepository.findByModel(propertyId, 'Property')
 
     if (!price) {
@@ -119,13 +120,13 @@ class PriceService {
     }
 
     const nights = calculateNights(checkin, checkout)
-    let nightlyRate = price.night || 0
+    const nightlyRate = price.night || 0
     let subtotal = 0
 
-    // Calculate subtotal based on duration
+    // nightly subtotal logic
     if (nights >= 30 && price.month) {
       const fullMonths = Math.floor(nights / 30)
-      let remaining = nights % 30
+      const remaining = nights % 30
 
       const fullWeeks = Math.floor(remaining / 7)
       const leftoverNights = remaining % 7
@@ -142,7 +143,7 @@ class PriceService {
       subtotal = nightlyRate * nights
     }
 
-    // Extra guest fee
+    // extra guest fees
     let extraGuestPrice = 0
     const includedGuests = price.guests || 1
 
@@ -151,32 +152,52 @@ class PriceService {
       extraGuestPrice = extraGuests * price.addguests * nights
     }
 
-    // One-time fees
+    // one-time fees
     const cleaningFee = price.cleaning || 0
     const securityFee = price.security_deposit || 0
+    const baseSubtotal = subtotal + extraGuestPrice
 
-    // Service fee (10% platform commission)
+    // service fee
     const serviceFeeRate = 0.1
-    const serviceFee = Math.round((subtotal + extraGuestPrice) * serviceFeeRate * 100) / 100
+    const serviceFee = Math.round(baseSubtotal * serviceFeeRate * 100) / 100
 
-    // Totals
-    const totalPrice = subtotal + extraGuestPrice + cleaningFee + serviceFee
-    const averagePrice = Math.round((totalPrice / nights) * 100) / 100
+    // total BEFORE coupon
+    const totalPrice = baseSubtotal + cleaningFee + serviceFee + securityFee
+
+    // coupon
+    let coupon = null
+    let discountAmount = 0
+
+    if (couponCode) {
+      coupon = await CouponService.validateAndApplyCoupon(
+        couponCode,
+        propertyId,
+        totalPrice,
+        price.currency || PRICING_LIMITS.DEFAULT_CURRENCY
+      )
+      discountAmount = coupon.discountAmount
+    }
+
+    // total AFTER coupon
+    const toPay = totalPrice - discountAmount
+    const averagePrice = Math.round((toPay / nights) * 100) / 100
 
     return {
       pricing: {
         price: nightlyRate,
-        subtotal_price: subtotal,
+        subtotal_price: subtotal, // nightly total
+        extra_guest_price: extraGuestPrice,
         cleaning_fee: cleaningFee,
         security_fee: securityFee,
         service_fee: serviceFee,
-        extra_guest_price: extraGuestPrice,
+        total_price: totalPrice, // before coupon
+        discount_amount: discountAmount,
         avarage_price: averagePrice,
-        total_price: totalPrice,
-        to_pay: totalPrice
+        to_pay: toPay // after coupon
       },
       currency: price.currency || PRICING_LIMITS.DEFAULT_CURRENCY,
-      nights
+      nights,
+      coupon
     }
   }
 }

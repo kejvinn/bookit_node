@@ -74,6 +74,11 @@ class Property extends Model {
       foreignKey: 'property_id',
       as: 'reservations'
     })
+
+    Property.hasMany(models.Coupon, {
+      foreignKey: 'property_id',
+      as: 'coupons'
+    })
   }
 
   isCompleted() {
@@ -128,7 +133,6 @@ Property.init(
     country_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true
-      // NO references - just a column
     },
     city: {
       type: DataTypes.STRING(160),
@@ -149,7 +153,6 @@ Property.init(
     state_id: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true
-      // NO references - just a column
     },
     zip_code: {
       type: DataTypes.STRING(10),

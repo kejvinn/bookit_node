@@ -39,6 +39,24 @@ Reservation.init(
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true
     },
+    coupon_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true
+    },
+    coupon_code: {
+      type: DataTypes.STRING(15),
+      allowNull: true
+    },
+    discount_amount: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0
+    },
+    discount_type: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+      comment: 'percentage or fixed'
+    },
     tracking_code: {
       type: DataTypes.STRING(50),
       allowNull: false
