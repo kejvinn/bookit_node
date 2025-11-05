@@ -1,5 +1,14 @@
 import winston from 'winston'
 
+import path from 'path'
+import { existsSync, mkdirSync } from 'fs'
+
+const logDir = path.join(process.cwd(), 'logs')
+
+if (!existsSync(logDir)) {
+  mkdirSync(logDir)
+}
+
 const logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(
@@ -9,8 +18,8 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: 'airbnb-clone-api' },
   transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
+    new winston.transports.File({ filename: path.join(logDir, 'error.log'), level: 'error' }),
+    new winston.transports.File({ filename: path.join(logDir, 'combined.log') })
   ]
 })
 
