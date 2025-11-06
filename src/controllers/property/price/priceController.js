@@ -1,5 +1,5 @@
-import priceService from '../../services/property/priceService.js'
-import { asyncHandler } from '../../utils/helpers.js'
+import priceService from '../../../services/property/price/priceService.js'
+import { asyncHandler } from '../../../utils/helpers.js'
 
 export class PriceController {
   static updatePricing = asyncHandler(async (req, res) => {

@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { PriceController } from '../../controllers/property/priceController.js'
-import { optionalAuth, authenticate } from '../../middleware/auth/authenticate.js'
-import { validatePropertyPricing } from '../../middleware/validation/property/price.js'
+import { PriceController } from '../../../controllers/property/price/priceController.js'
+import { authenticate, optionalAuth } from '../../../middleware/auth/authenticate.js'
+import { validatePropertyPricing } from '../../../middleware/validation/property/price/price.js'
 
 const router = Router()
 

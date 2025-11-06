@@ -1,11 +1,12 @@
-import PriceRepository from '../../repositories/property/PriceRepository.js'
-import PropertyRepository from '../../repositories/property/PropertyRepository.js'
-import { pricingUtils } from '../../utils/property/pricingUtils.js'
-import { AppError } from '../../utils/helpers.js'
-import { PRICING_LIMITS } from '../../../config/constants.js'
-import { HTTP_STATUS } from '../../../config/constants.js'
-import { calculateNights } from '../../utils/reservation/dateUtils.js'
-import CouponService from '../coupon/couponService.js'
+import PriceRepository from '../../../repositories/property/price/PriceRepository.js'
+import PropertyRepository from '../../../repositories/property/PropertyRepository.js'
+import { pricingUtils } from '../../../utils/property/pricingUtils.js'
+import { AppError } from '../../../utils/helpers.js'
+import { PRICING_LIMITS } from '../../../../config/constants.js'
+import { HTTP_STATUS } from '../../../../config/constants.js'
+import { calculateNights } from '../../../utils/reservation/dateUtils.js'
+import CouponService from '../../coupon/couponService.js'
+import SeasonalPriceRepository from '../../../repositories/property/price/SeasonalPriceRepository.js'
 
 class PriceService {
   async updatePricing(propertyId, userId, data) {
@@ -112,6 +113,17 @@ class PriceService {
     return { message: 'Pricing deleted successfully' }
   }
 
+  async getNightlyRateForDate(propertyId, date) {
+    const seasonalPrice = await SeasonalPriceRepository.findActiveForDate(propertyId, date)
+
+    if (seasonalPrice) {
+      return seasonalPrice.price
+    }
+
+    const basePrice = await PriceRepository.findByModel(propertyId, 'Property')
+    return basePrice ? basePrice.night : null
+  }
+
   async calculateReservationPricing(propertyId, guests, checkin, checkout, couponCode = null) {
     const price = await PriceRepository.findByModel(propertyId, 'Property')
 
@@ -123,27 +135,20 @@ class PriceService {
     const nightlyRate = price.night || 0
     let subtotal = 0
 
-    // nightly subtotal logic
-    if (nights >= 30 && price.month) {
-      const fullMonths = Math.floor(nights / 30)
-      const remaining = nights % 30
+    // Calculate subtotal with seasonal pricing
+    const checkinDate = new Date(checkin)
+    for (let i = 0; i < nights; i++) {
+      const currentDate = new Date(checkinDate)
+      currentDate.setDate(currentDate.getDate() + i)
 
-      const fullWeeks = Math.floor(remaining / 7)
-      const leftoverNights = remaining % 7
+      // Convert Date object to YYYY-MM-DD string format
+      const dateString = currentDate.toISOString().split('T')[0]
 
-      subtotal =
-        price.month * fullMonths +
-        (price.week ? price.week * fullWeeks : nightlyRate * fullWeeks * 7) +
-        nightlyRate * leftoverNights
-    } else if (nights >= 7 && price.week) {
-      const fullWeeks = Math.floor(nights / 7)
-      const remainingNights = nights % 7
-      subtotal = price.week * fullWeeks + nightlyRate * remainingNights
-    } else {
-      subtotal = nightlyRate * nights
+      const nightRate = await this.getNightlyRateForDate(propertyId, dateString)
+      subtotal += nightRate || nightlyRate
     }
 
-    // extra guest fees
+    // Extra guest fees
     let extraGuestPrice = 0
     const includedGuests = price.guests || 1
 
@@ -152,19 +157,19 @@ class PriceService {
       extraGuestPrice = extraGuests * price.addguests * nights
     }
 
-    // one-time fees
+    // One-time fees
     const cleaningFee = price.cleaning || 0
     const securityFee = price.security_deposit || 0
     const baseSubtotal = subtotal + extraGuestPrice
 
-    // service fee
+    // Service fee
     const serviceFeeRate = 0.1
     const serviceFee = Math.round(baseSubtotal * serviceFeeRate * 100) / 100
 
-    // total BEFORE coupon
+    // Total BEFORE coupon
     const totalPrice = baseSubtotal + cleaningFee + serviceFee + securityFee
 
-    // coupon
+    // Coupon
     let coupon = null
     let discountAmount = 0
 
@@ -178,22 +183,25 @@ class PriceService {
       discountAmount = coupon.discountAmount
     }
 
-    // total AFTER coupon
+    // Total AFTER coupon
     const toPay = totalPrice - discountAmount
     const averagePrice = Math.round((toPay / nights) * 100) / 100
 
+    // Calculate the average nightly rate based on actual subtotal (with seasonal pricing)
+    const averageNightlyRate = Math.round((subtotal / nights) * 100) / 100
+
     return {
       pricing: {
-        price: nightlyRate,
-        subtotal_price: subtotal, // nightly total
+        price: averageNightlyRate, // Use calculated average instead of base rate
+        subtotal_price: subtotal,
         extra_guest_price: extraGuestPrice,
         cleaning_fee: cleaningFee,
         security_fee: securityFee,
         service_fee: serviceFee,
-        total_price: totalPrice, // before coupon
+        total_price: totalPrice,
         discount_amount: discountAmount,
         avarage_price: averagePrice,
-        to_pay: toPay // after coupon
+        to_pay: toPay
       },
       currency: price.currency || PRICING_LIMITS.DEFAULT_CURRENCY,
       nights,

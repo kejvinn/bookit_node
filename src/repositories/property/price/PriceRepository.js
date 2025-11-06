@@ -1,5 +1,5 @@
-import { BaseRepository } from '../BaseRepository.js'
-import PropertyPrice from '../../models/property/Price/Price.js'
+import { BaseRepository } from '../../BaseRepository.js'
+import PropertyPrice from '../../../models/property/Price/Price.js'
 
 class PriceRepository extends BaseRepository {
   constructor() {
