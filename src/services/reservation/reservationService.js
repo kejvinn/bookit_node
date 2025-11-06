@@ -1,6 +1,6 @@
 import ReservationRepository from '../../repositories/reservation/ReservationRepository.js'
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
-import PriceService from '../property/priceService.js'
+import PriceService from '../property/price/priceService.js'
 import CalendarService from '../property/calendarService.js'
 import ReservationValidationService from './reservationValidationService.js'
 import { AppError } from '../../utils/helpers.js'
@@ -34,22 +34,19 @@ class ReservationService {
       data.checkout,
       data.coupon_code || null
     )
-
-    const reservationStatus = property.allow_instant_booking ? 'confirmed' : 'awaiting_host_approval'
-
-    // Create reservation
+    // Create reservation with pending_payment status
     const reservation = await ReservationRepository.create({
       user_by: userId,
       user_to: property.user_id,
       property_id: propertyId,
       tracking_code: ReservationRepository.generateTrackingCode(),
-      confirmation_code: reservationStatus === 'confirmed' ? ReservationRepository.generateConfirmationCode() : null,
+      confirmation_code: null,
       checkin: data.checkin,
       checkout: data.checkout,
       guests: data.guests,
       nights,
       currency,
-      reservation_status: reservationStatus,
+      reservation_status: 'pending_payment', // Changed from awaiting_host_approval/confirmed
       payment_method: 'pending',
       coupon_id: coupon?.couponId || null,
       coupon_code: coupon?.couponCode || null,
@@ -66,15 +63,10 @@ class ReservationService {
       await CouponService.incrementUsage(coupon.couponId)
     }
 
-    if (reservationStatus === 'confirmed') {
-      const dates = getDateRange(data.checkin, data.checkout)
-      await CalendarService.blockDates(propertyId, property.user_id, dates)
-    }
-
     return {
       ...reservation.toJSON(),
       instant_booking: property.allow_instant_booking,
-      requires_approval: !property.allow_instant_booking
+      requires_payment: true
     }
   }
 

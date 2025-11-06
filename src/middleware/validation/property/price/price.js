@@ -1,7 +1,6 @@
 import Joi from 'joi'
-import { AppError } from '../../../utils/helpers.js'
-import { HTTP_STATUS } from '../../../../config/constants.js'
-import { PRICING_LIMITS } from '../../../../config/constants.js'
+import { AppError } from '../../../../utils/helpers.js'
+import { HTTP_STATUS, PRICING_LIMITS } from '../../../../../config/constants.js'
 
 const propertyPricingSchema = Joi.object({
   night: Joi.number().min(PRICING_LIMITS.MIN_NIGHTLY_PRICE).max(PRICING_LIMITS.MAX_NIGHTLY_PRICE).required().messages({

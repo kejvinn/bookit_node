@@ -52,7 +52,7 @@ PropertySeasonalPrice.init(
     tableName: 'seasonal_prices',
     indexes: [
       {
-        unique: true,
+        unique: false,
         fields: ['property_id']
       }
     ]
