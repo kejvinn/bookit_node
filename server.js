@@ -10,6 +10,7 @@ process.on('uncaughtException', (err) => {
 
 const startServer = async () => {
   try {
+    console.log(process.env)
     await connectDatabase()
 
     const server = app.listen(config.port, () => {
