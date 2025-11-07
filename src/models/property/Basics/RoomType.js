@@ -19,7 +19,8 @@ RoomType.init(
     },
     room_type_id: {
       type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     language_id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -34,7 +35,13 @@ RoomType.init(
     sequelize,
     modelName: 'RoomType',
     tableName: 'room_types',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['room_type_id']
+      }
+    ]
   }
 )
 
