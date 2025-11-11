@@ -3,10 +3,13 @@ import PropertyRepository from '../../repositories/property/PropertyRepository.j
 import PriceService from '../property/price/priceService.js'
 import CalendarService from '../property/calendarService.js'
 import ReservationValidationService from './reservationValidationService.js'
+import PaymentService from '../payment/paymentService.js'
 import { AppError } from '../../utils/helpers.js'
 import { HTTP_STATUS } from '../../../config/constants.js'
 import { getDateRange } from '../../utils/reservation/dateUtils.js'
 import CouponService from '../coupon/couponService.js'
+import logger from '../../utils/logger.js'
+import { RESERVATION_STATUS } from '../../../config/constants.js'
 
 class ReservationService {
   async createReservation(userId, propertyId, data) {
@@ -46,7 +49,7 @@ class ReservationService {
       guests: data.guests,
       nights,
       currency,
-      reservation_status: 'pending_payment', // Changed from awaiting_host_approval/confirmed
+      reservation_status: RESERVATION_STATUS.PENDING_PAYMENT,
       payment_method: 'pending',
       coupon_id: coupon?.couponId || null,
       coupon_code: coupon?.couponCode || null,
@@ -130,7 +133,7 @@ class ReservationService {
       throw new AppError('Only the host can reject this reservation', HTTP_STATUS.FORBIDDEN)
     }
 
-    if (reservation.reservation_status !== 'awaiting_host_approval') {
+    if (reservation.reservation_status !== RESERVATION_STATUS.AWAITING_HOST_APPROVAL) {
       throw new AppError('Only pending reservations can be rejected', HTTP_STATUS.BAD_REQUEST)
     }
 
@@ -138,15 +141,42 @@ class ReservationService {
       throw new AppError('Reservation is already canceled', HTTP_STATUS.BAD_REQUEST)
     }
 
-    await ReservationRepository.update(reservationId, {
-      reservation_status: 'rejected',
-      is_canceled: true,
-      cancel_date: new Date(),
-      reason_to_cancel: reason,
-      modified: new Date()
-    })
+    try {
+      if (reservation.is_payed && !reservation.is_refunded) {
+        await PaymentService.refundPayment(reservationId, hostId, 'host')
+        logger.info(`Auto-refund triggered for rejected reservation ${reservationId}`)
 
-    return { message: 'Reservation rejected' }
+        await ReservationRepository.update(reservationId, {
+          reservation_status: RESERVATION_STATUS.REJECTED,
+          is_canceled: true,
+          is_refunded: true,
+          cancel_date: new Date(),
+          reason_to_cancel: reason || null,
+          modified: new Date()
+        })
+      } else {
+        // If not paid, just mark as rejected
+        await ReservationRepository.update(reservationId, {
+          reservation_status: RESERVATION_STATUS.REJECTED,
+          is_canceled: true,
+          cancel_date: new Date(),
+          reason_to_cancel: reason || null,
+          modified: new Date()
+        })
+      }
+    } catch (error) {
+      logger.error(`Auto-refund failed for reservation ${reservationId}:`, error)
+
+      await ReservationRepository.update(reservationId, {
+        reservation_status: RESERVATION_STATUS.REJECTED,
+        is_canceled: true,
+        cancel_date: new Date(),
+        reason_to_cancel: reason || null,
+        modified: new Date()
+      })
+    }
+
+    return { message: 'Reservation rejected', reason }
   }
 
   async cancelReservation(reservationId, userId, reason) {
@@ -163,12 +193,12 @@ class ReservationService {
       throw new AppError('Reservation is already canceled', HTTP_STATUS.BAD_REQUEST)
     }
 
-    if (reservation.reservation_status === 'completed') {
+    if (reservation.reservation_status === RESERVATION_STATUS.COMPLETED) {
       throw new AppError('Cannot cancel completed reservation', HTTP_STATUS.BAD_REQUEST)
     }
 
     // Unblock dates if reservation was confirmed
-    if (reservation.reservation_status === 'confirmed') {
+    if (reservation.reservation_status === RESERVATION_STATUS.CONFIRMED) {
       const dates = getDateRange(reservation.checkin, reservation.checkout)
       const property = await PropertyRepository.findOne({
         id: reservation.property_id
@@ -176,12 +206,28 @@ class ReservationService {
       await CalendarService.unblockDates(reservation.property_id, property.user_id, dates)
     }
 
+    // AUTO-REFUND IF PAID
+    let refundAttempted = false
+    try {
+      if (reservation.is_payed && !reservation.is_refunded) {
+        const canceledBy = isGuest ? 'guest' : 'host'
+        refundAttempted = true
+        await PaymentService.refundPayment(reservationId, userId, canceledBy)
+        logger.info(`Auto-refund triggered for canceled reservation ${reservationId} by ${canceledBy}`)
+      }
+    } catch (error) {
+      logger.error(`Auto-refund failed for reservation ${reservationId}:`, error)
+      // Continue even if refund fails
+    }
+
+    // ✅ Always set canceled flags and reason
     await ReservationRepository.update(reservationId, {
       is_canceled: true,
-      reservation_status: 'canceled',
+      reservation_status: RESERVATION_STATUS.CANCELED,
       cancel_date: new Date(),
-      reason_to_cancel: reason,
-      modified: new Date()
+      reason_to_cancel: reason || null,
+      modified: new Date(),
+      ...(refundAttempted ? { is_refunded: true } : {})
     })
 
     return {
@@ -189,7 +235,6 @@ class ReservationService {
       canceled_by: isGuest ? 'guest' : 'host'
     }
   }
-
   async getUserReservations(userId, type = 'guest') {
     return await ReservationRepository.findUserReservations(userId, type)
   }

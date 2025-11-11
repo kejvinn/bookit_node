@@ -26,5 +26,13 @@ export const config = {
   app: {
     url: process.env.APP_URL || 'http://localhost:3000',
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:4200'
+  },
+  paypal: {
+    mode: process.env.PAYPAL_MODE || 'sandbox',
+    clientId: process.env.PAYPAL_CLIENT_ID,
+    clientSecret: process.env.PAYPAL_CLIENT_SECRET,
+    webhookId: process.env.PAYPAL_WEBHOOK_ID,
+    successUrl: process.env.PAYPAL_SUCCESS_URL || 'http://localhost:4200/reservations/success',
+    cancelUrl: process.env.PAYPAL_CANCEL_URL || 'http://localhost:4200/reservations/cancel'
   }
 }
