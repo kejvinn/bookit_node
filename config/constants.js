@@ -33,3 +33,19 @@ export const AVAILABILITY_TYPES = {
   SOMETIMES: 'sometimes',
   ONE_TIME: 'one_time'
 }
+
+export const RESERVATION_STATUS = {
+  PENDING_PAYMENT: 'pending_payment',
+  AWAITING_HOST_APPROVAL: 'awaiting_host_approval',
+  CONFIRMED: 'confirmed',
+  CANCELED: 'canceled',
+  COMPLETED: 'completed',
+  REJECTED: 'rejected'
+}
+
+export const PAYMENT_STATUS = {
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  REFUNDED: 'refunded'
+}

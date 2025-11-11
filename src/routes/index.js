@@ -12,7 +12,8 @@ import publishRoutes from './property/publish.js'
 import reservationRoutes from './reservation/reservation.js'
 import instantBookingRoutes from './reservation/instantBooking.js'
 import couponRoutes from './coupon/coupon.js'
-import seasonalPrice from './property/price/seasonalPrice.js'
+import seasonalPriceRoutes from './property/price/seasonalPrice.js'
+import paymentRoutes from './payment/payment.js'
 
 const router = Router()
 
@@ -23,13 +24,14 @@ router.use('/properties', locationRoutes)
 router.use('/properties', descriptionRoutes)
 router.use('/properties', photosRoutes)
 router.use('/properties', priceRoutes)
-router.use('/properties', seasonalPrice)
+router.use('/properties', seasonalPriceRoutes)
 router.use('/properties', calendarRoutes)
 router.use('/properties', publishRoutes)
 router.use('/properties', propertyRoutes)
 router.use('/reservations', instantBookingRoutes)
 router.use('/reservations', reservationRoutes)
 router.use('/coupons', couponRoutes)
+router.use('/payments', paymentRoutes)
 
 router.get('/health', (req, res) => {
   res.json({
