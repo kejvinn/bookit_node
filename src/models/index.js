@@ -17,6 +17,8 @@ import PropertySeasonalPrice from './property/Price/SeasonalPrice.js'
 import Calendar from './property/Calendar/Calendar.js'
 import Reservation from './reservation/Reservation.js'
 import Coupon from './coupon/Coupon.js'
+import Wishlist from './wishlist/Wishlist.js'
+import UserWishlist from './wishlist/UserWishlist.js'
 
 const models = {
   User,
@@ -36,7 +38,9 @@ const models = {
   PropertySeasonalPrice,
   Calendar,
   Reservation,
-  Coupon
+  Coupon,
+  Wishlist,
+  UserWishlist
 }
 
 // Setup associations
@@ -67,5 +71,7 @@ export {
   PropertySeasonalPrice,
   Calendar,
   Reservation,
-  Coupon
+  Coupon,
+  Wishlist,
+  UserWishlist
 }
