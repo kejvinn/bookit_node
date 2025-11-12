@@ -36,6 +36,16 @@ class User extends Model {
       foreignKey: 'user_id',
       as: 'created_coupons'
     })
+
+    User.hasMany(models.Wishlist, {
+      foreignKey: 'user_id',
+      as: 'wishlists'
+    })
+
+    User.hasMany(models.UserWishlist, {
+      foreignKey: 'user_id',
+      as: 'wishlistItems'
+    })
   }
 
   async comparePassword(candidatePassword) {

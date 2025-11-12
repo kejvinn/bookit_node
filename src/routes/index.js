@@ -14,6 +14,7 @@ import instantBookingRoutes from './reservation/instantBooking.js'
 import couponRoutes from './coupon/coupon.js'
 import seasonalPriceRoutes from './property/price/seasonalPrice.js'
 import paymentRoutes from './payment/payment.js'
+import wishlistRoutes from './wishlist/wishlist.js'
 
 const router = Router()
 
@@ -32,6 +33,7 @@ router.use('/reservations', instantBookingRoutes)
 router.use('/reservations', reservationRoutes)
 router.use('/coupons', couponRoutes)
 router.use('/payments', paymentRoutes)
+router.use('/wishlists', wishlistRoutes)
 
 router.get('/health', (req, res) => {
   res.json({

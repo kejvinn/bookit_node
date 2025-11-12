@@ -79,6 +79,18 @@ class Property extends Model {
       foreignKey: 'property_id',
       as: 'coupons'
     })
+
+    Property.hasMany(models.UserWishlist, {
+      foreignKey: 'property_id',
+      as: 'wishlistItems'
+    })
+
+    Property.belongsToMany(models.Wishlist, {
+      through: models.UserWishlist,
+      foreignKey: 'property_id',
+      otherKey: 'wishlist_id',
+      as: 'wishlists'
+    })
   }
 
   isCompleted() {
