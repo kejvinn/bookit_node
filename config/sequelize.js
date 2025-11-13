@@ -18,7 +18,10 @@ const sequelize = new Sequelize(config.db.name, config.db.user, config.db.passwo
     createdAt: 'created',
     updatedAt: 'modified',
     underscored: true,
-    freezeTableName: true
+    freezeTableName: true,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
+    engine: 'InnoDB'
   },
   timezone: '+00:00'
 })
@@ -30,7 +33,7 @@ export const connectDatabase = async () => {
     logger.info('Database connection has been established successfully')
 
     if (config.nodeEnv === 'development') {
-      await sequelize.sync({ alter: false }) // Don't alter in production
+      await sequelize.sync({ alter: true }) // Don't alter in production
       logger.info('Database synchronized')
     }
   } catch (error) {

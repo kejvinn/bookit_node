@@ -167,7 +167,11 @@ UserProfile.init(
   {
     sequelize,
     modelName: 'UserProfile',
-    tableName: 'user_profiles'
+    tableName: 'user_profiles',
+    indexes: [{ name: 'user_id', fields: ['user_id'] }],
+    uniqueKeys: {
+      user_id_unique: { fields: ['user_id'] }
+    }
   }
 )
 

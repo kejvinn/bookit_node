@@ -38,7 +38,11 @@ CharacteristicTranslation.init(
     sequelize,
     modelName: 'CharacteristicTranslation',
     tableName: 'characteristic_translations',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      { name: 'language_id', fields: ['language_id'] },
+      { name: 'characteristic_name', fields: ['characteristic_name'] }
+    ]
   }
 )
 

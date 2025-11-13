@@ -82,7 +82,13 @@ PropertyTranslation.init(
   {
     sequelize,
     modelName: 'PropertyTranslation',
-    tableName: 'property_translations'
+    tableName: 'property_translations',
+    indexes: [
+      { name: 'property_id', fields: ['property_id'] },
+      { name: 'language_id', fields: ['language_id'] },
+      { name: 'title', fields: ['title'] },
+      { name: 'idx_property_translation_lang', fields: ['property_id', 'language_id'] }
+    ]
   }
 )
 

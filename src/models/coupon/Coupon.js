@@ -123,7 +123,11 @@ Coupon.init(
     tableName: 'coupons',
     timestamps: true,
     createdAt: 'created',
-    updatedAt: 'modified'
+    updatedAt: 'modified',
+    indexes: [
+      { name: 'user_id', fields: ['user_id'] },
+      { name: 'property_id', fields: ['property_id'] }
+    ]
   }
 )
 

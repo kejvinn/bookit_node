@@ -86,7 +86,14 @@ PropertyStep.init(
     sequelize,
     modelName: 'PropertyStep',
     tableName: 'property_steps',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        name: 'property_id',
+        fields: ['property_id']
+      }
+    ]
   }
 )
 

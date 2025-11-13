@@ -54,7 +54,12 @@ State.init(
     sequelize,
     modelName: 'State',
     tableName: 'states',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      { name: 'states_zone_id_foreign', fields: ['zone_id'] },
+      { name: 'states_country_id_foreign', fields: ['country_id'] },
+      { name: 'name', fields: ['name'] }
+    ]
   }
 )
 

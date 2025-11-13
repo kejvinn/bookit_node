@@ -34,7 +34,13 @@ AccommodationType.init(
     sequelize,
     modelName: 'AccommodationType',
     tableName: 'accommodation_types',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        name: 'language_id',
+        fields: ['language_id', 'accommodation_type_name']
+      }
+    ]
   }
 )
 

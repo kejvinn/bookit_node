@@ -71,7 +71,12 @@ UserWishlist.init(
     tableName: 'user_wishlists',
     timestamps: true,
     createdAt: 'created',
-    updatedAt: 'modified'
+    updatedAt: 'modified',
+    indexes: [
+      { name: 'wishlist_id', fields: ['wishlist_id'] },
+      { name: 'property_id', fields: ['property_id'] },
+      { name: 'user_id', fields: ['user_id'] }
+    ]
   }
 )
 

@@ -51,9 +51,16 @@ PropertySeasonalPrice.init(
     modelName: 'SeasonalPrice',
     tableName: 'seasonal_prices',
     indexes: [
+      { name: 'property_id_index', fields: ['property_id'] },
       {
-        unique: false,
+        unique: true,
+        name: 'property_id_unique',
         fields: ['property_id']
+      },
+      {
+        name: 'idx_property_dates',
+        fields: ['property_id', 'start_date', 'end_date'],
+        unique: false
       }
     ]
   }
