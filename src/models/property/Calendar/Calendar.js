@@ -1,12 +1,12 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../../../config/sequelize.js';
+import { DataTypes, Model } from 'sequelize'
+import sequelize from '../../../../config/sequelize.js'
 
 class Calendar extends Model {
   static associate(models) {
     Calendar.belongsTo(models.Property, {
       foreignKey: 'property_id',
       as: 'property'
-    });
+    })
   }
 }
 
@@ -31,16 +31,16 @@ Calendar.init(
       allowNull: true,
       comment: 'JSON: blocked_dates, custom_pricing, etc.',
       get() {
-        const rawValue = this.getDataValue('calendar_data');
-        if (!rawValue) return { blocked_dates: [], custom_pricing: [] };
+        const rawValue = this.getDataValue('calendar_data')
+        if (!rawValue) return { blocked_dates: [], custom_pricing: [] }
         try {
-          return JSON.parse(rawValue);
+          return JSON.parse(rawValue)
         } catch {
-          return { blocked_dates: [], custom_pricing: [] };
+          return { blocked_dates: [], custom_pricing: [] }
         }
       },
       set(value) {
-        this.setDataValue('calendar_data', JSON.stringify(value));
+        this.setDataValue('calendar_data', JSON.stringify(value))
       }
     },
     created: {
@@ -57,8 +57,15 @@ Calendar.init(
     tableName: 'calendars',
     timestamps: true,
     createdAt: 'created',
-    updatedAt: 'modified'
+    updatedAt: 'modified',
+    comment: 'This table holds the calendar for each property',
+    indexes: [
+      {
+        unique: true,
+        fields: ['property_id']
+      }
+    ]
   }
-);
+)
 
-export default Calendar;
+export default Calendar

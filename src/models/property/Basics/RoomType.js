@@ -40,6 +40,10 @@ RoomType.init(
       {
         unique: true,
         fields: ['room_type_id']
+      },
+      {
+        name: 'language_id',
+        fields: ['language_id', 'room_type_name']
       }
     ]
   }

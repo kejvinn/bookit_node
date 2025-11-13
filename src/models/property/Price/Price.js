@@ -69,7 +69,11 @@ PropertyPrice.init(
     sequelize,
     modelName: 'PropertyPrice',
     tableName: 'prices',
-    timestamps: false // ✅ Add this line
+    timestamps: false,
+    indexes: [
+      { name: 'model_id', fields: ['model_id'] },
+      { name: 'model', fields: ['model'] }
+    ]
   }
 )
 

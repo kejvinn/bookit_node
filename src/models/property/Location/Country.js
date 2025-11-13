@@ -84,7 +84,12 @@ Country.init(
     sequelize,
     modelName: 'Country',
     tableName: 'countries',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      { name: 'countries_zone_id_foreign', fields: ['zone_id'] },
+      { name: 'countries_iso_code', fields: ['iso_code'] },
+      { name: 'countries_currency_id_foreign', fields: ['currency_id'] }
+    ]
   }
 )
 

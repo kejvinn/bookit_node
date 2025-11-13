@@ -209,6 +209,15 @@ User.init(
     sequelize,
     modelName: 'User',
     tableName: 'users',
+    indexes: [
+      { name: 'user_email', fields: ['email'] },
+      { name: 'user_login', fields: ['email', 'password'] },
+      { name: 'id_user_passwd', fields: ['id', 'password'] }
+    ],
+    uniqueKeys: {
+      username_unique: { fields: ['username'] },
+      email_unique: { fields: ['email'] }
+    },
     hooks: {
       beforeCreate: async (user) => {
         if (user.password) {

@@ -228,7 +228,19 @@ Reservation.init(
     createdAt: 'created',
     updatedAt: 'modified',
     paranoid: true,
-    deletedAt: 'deleted'
+    deletedAt: 'deleted',
+    indexes: [
+      { name: 'user_by', fields: ['user_by'] },
+      { name: 'user_to', fields: ['user_to'] },
+      { name: 'property_id', fields: ['property_id'] },
+      { name: 'cancellation_policy_id', fields: ['cancellation_policy_id'] },
+      { name: 'coupon_id', fields: ['coupon_id'] },
+      {
+        name: 'idx_paypal_token',
+        fields: ['paypal_token'],
+        unique: false
+      }
+    ]
   }
 )
 

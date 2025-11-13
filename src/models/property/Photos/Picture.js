@@ -60,7 +60,12 @@ PropertyPicture.init(
   {
     sequelize,
     modelName: 'PropertyPicture',
-    tableName: 'property_pictures'
+    tableName: 'property_pictures',
+    indexes: [
+      { name: 'property_id', fields: ['property_id'] },
+      { name: 'user_id', fields: ['user_id'] },
+      { name: 'idx_property_pictures_property_hash', fields: ['property_id', 'file_hash'] }
+    ]
   }
 )
 

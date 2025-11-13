@@ -337,7 +337,16 @@ Property.init(
   {
     sequelize,
     modelName: 'Property',
-    tableName: 'properties'
+    tableName: 'properties',
+    indexes: [
+      { name: 'user_id', fields: ['user_id'] },
+      { name: 'currency_id', fields: ['currency_id'] },
+      { name: 'room_type_id', fields: ['room_type_id'] },
+      { name: 'accommodation_type_id', fields: ['accommodation_type_id'] },
+      { name: 'cancellation_policy_id', fields: ['cancellation_policy_id'] },
+      { name: 'idx_property_country', fields: ['country_id'] },
+      { name: 'idx_property_state', fields: ['state_id'] }
+    ]
   }
 )
 

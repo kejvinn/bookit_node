@@ -31,7 +31,11 @@ CharacteristicsProperties.init(
     sequelize,
     modelName: 'CharacteristicsProperties',
     tableName: 'characteristics_properties',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      { name: 'property_id', fields: ['property_id'] },
+      { name: 'characteristic_id', fields: ['characteristic_id'] }
+    ]
   }
 )
 
