@@ -33,7 +33,7 @@ export const connectDatabase = async () => {
     logger.info('Database connection has been established successfully')
 
     if (config.nodeEnv === 'development') {
-      await sequelize.sync({ alter: true }) // Don't alter in production
+      // await sequelize.sync({ alter: true }) // Don't alter in production
       logger.info('Database synchronized')
     }
   } catch (error) {
