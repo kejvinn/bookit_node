@@ -1,7 +1,7 @@
 import publishService from '../../services/property/publishService.js'
 import { asyncHandler } from '../../utils/helpers.js'
 
-export class PublishController {
+export class PropertyPublishController {
   static submitForReview = asyncHandler(async (req, res) => {
     const result = await publishService.submitForReview(req.params.id, req.user.id)
 

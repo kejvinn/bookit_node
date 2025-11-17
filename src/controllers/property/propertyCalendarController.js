@@ -1,7 +1,7 @@
 import calendarService from '../../services/property/calendarService.js'
 import { asyncHandler } from '../../utils/helpers.js'
 
-export class CalendarController {
+export class PropertyCalendarController {
   static updateCalendar = asyncHandler(async (req, res) => {
     const result = await calendarService.updateCalendar(req.params.id, req.user.id, req.body)
 
