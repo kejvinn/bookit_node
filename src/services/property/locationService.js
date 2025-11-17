@@ -69,10 +69,6 @@ class LocationService {
     return updatedProperty
   }
 
-  async getCountries() {
-    return await CountryRepository.getAllActive()
-  }
-
   async getStates(countryId) {
     return await CountryRepository.getStates(countryId)
   }
