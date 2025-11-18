@@ -2,7 +2,7 @@ import photosService from '../../services/property/photosService.js'
 import { asyncHandler } from '../../utils/helpers.js'
 import { AppError } from '../../utils/helpers.js'
 
-export class PhotosController {
+export class PropertyPhotosController {
   static uploadPhotos = asyncHandler(async (req, res) => {
     if (!req.processedFiles || req.processedFiles.length === 0) {
       throw new AppError('No images uploaded', 400)

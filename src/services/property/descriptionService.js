@@ -66,10 +66,6 @@ class DescriptionService {
     return await PropertyRepository.findByIdWithDetails(propertyId, languageId)
   }
 
-  async getCharacteristics(languageId = 1) {
-    return await CharacteristicRepository.getAllWithTranslations(languageId)
-  }
-
   async getPropertyAmenities(propertyId) {
     return await CharacteristicRepository.getPropertyCharacteristics(propertyId)
   }
