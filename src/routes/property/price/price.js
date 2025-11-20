@@ -13,14 +13,16 @@ const router = Router()
 router
   .route('/:id/pricing')
   .get(optionalAuth, PropertyPriceController.getPropertyPricing)
-  .patch('/update', authenticate, validatePropertyPricing, PropertyPriceController.updatePricing)
-  .delete('/delete', authenticate, PropertyPriceController.deletePropertyPricing)
+  .patch(authenticate, validatePropertyPricing, PropertyPriceController.updatePricing)
+  .delete(authenticate, PropertyPriceController.deletePropertyPricing)
 
 router
   .route('/:id/seasonal-prices')
   .get(optionalAuth, PropertyPriceController.getPropertySeasonalPrices)
-  .post('/create', authenticate, validateSeasonalPrice, PropertyPriceController.createSeasonalPrice)
-  .patch('/:seasonalPriceId/update', authenticate, validateUpdateSeasonalPrice, PropertyPriceController.updateSeasonalPrice)
-  .delete('/:seasonalPriceId/delete', authenticate, PropertyPriceController.deleteSeasonalPrice)
+  .post(authenticate, validateSeasonalPrice, PropertyPriceController.createSeasonalPrice)
+router
+  .route('/:id/seasonal-prices/:seasonalPriceId')
+  .patch(authenticate, validateUpdateSeasonalPrice, PropertyPriceController.updateSeasonalPrice)
+  .delete(authenticate, PropertyPriceController.deleteSeasonalPrice)
 
 export default router

@@ -5,6 +5,7 @@ import Property from './property/Property.js'
 import PropertyStep from './property/PropertyStep.js'
 import RoomType from './property/Basics/RoomType.js'
 import AccommodationType from './property/Basics/AccommodationType.js'
+import AccommodationTypeTranslation from './property/Basics/AccommodationTypeTranslation.js'
 import Characteristic from './property/Description/Characteristic.js'
 import CharacteristicTranslation from './property/Description/CharacteristicTranslation.js'
 import CharacteristicsProperties from './property/Description/CharacteristicsProperties.js'
@@ -27,6 +28,7 @@ const models = {
   PropertyStep,
   RoomType,
   AccommodationType,
+  AccommodationTypeTranslation,
   Characteristic,
   CharacteristicTranslation,
   CharacteristicsProperties,
@@ -60,6 +62,7 @@ export {
   PropertyStep,
   RoomType,
   AccommodationType,
+  AccommodationTypeTranslation,
   Characteristic,
   CharacteristicTranslation,
   CharacteristicsProperties,

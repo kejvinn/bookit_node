@@ -6,10 +6,11 @@ import { PropertyCalendarController } from '../../controllers/property/propertyC
 const router = Router()
 router
   .route('/:id/calendar')
-  .get('', optionalAuth, PropertyCalendarController.getCalendar)
-  .put('/update', authenticate, validateCalendar, PropertyCalendarController.updateCalendar)
-  .delete('/delete', authenticate, PropertyCalendarController.deleteCalendar)
-  .post('/block', authenticate, validateBlockDates, PropertyCalendarController.blockDates)
-  .post('/unblock', authenticate, validateBlockDates, PropertyCalendarController.unblockDates)
+  .get(optionalAuth, PropertyCalendarController.getCalendar)
+  .put(authenticate, validateCalendar, PropertyCalendarController.updateCalendar)
+  .delete(authenticate, PropertyCalendarController.deleteCalendar)
+
+router.post('/:id/calendar/block', authenticate, validateBlockDates, PropertyCalendarController.blockDates)
+router.post('/:id/calendar/unblock', authenticate, validateBlockDates, PropertyCalendarController.unblockDates)
 
 export default router

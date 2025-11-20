@@ -1,26 +1,13 @@
 'use strict'
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('accommodation_types', {
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
-      },
-      accommodation_type_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false
-      },
-      language_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false
-      },
-      accommodation_type_name: {
-        type: Sequelize.STRING(128),
-        allowNull: false
+        primaryKey: true,
+        autoIncrement: false
       },
       created: {
         type: Sequelize.DATE,
@@ -32,10 +19,6 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    })
-
-    await queryInterface.addIndex('accommodation_types', ['language_id', 'accommodation_type_name'], {
-      name: 'language_id'
     })
   },
 

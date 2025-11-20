@@ -8,7 +8,7 @@ module.exports = {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: false,
+        autoIncrement: true,
         references: {
           model: 'properties',
           key: 'id'

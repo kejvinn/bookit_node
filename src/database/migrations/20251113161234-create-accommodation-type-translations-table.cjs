@@ -3,22 +3,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('room_types', {
+    await queryInterface.createTable('accommodation_type_translations', {
       id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
       },
-      room_type_id: {
+      accommodation_type_id: {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'accommodation_types',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       language_id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false
       },
-      room_type_name: {
+      accommodation_type_name: {
         type: Sequelize.STRING(128),
         allowNull: false
       },
@@ -34,14 +40,16 @@ module.exports = {
       }
     })
 
-    await queryInterface.addIndex('room_types', ['room_type_id', 'language_id'], {
-      unique: true,
-      name: 'unique_room_type_language'
+    await queryInterface.addIndex('accommodation_type_translations', ['language_id', 'accommodation_type_name'], {
+      name: 'language_id'
     })
-    await queryInterface.addIndex('room_types', ['language_id', 'room_type_name'], { name: 'language_id' })
+
+    await queryInterface.addIndex('accommodation_type_translations', ['accommodation_type_id'], {
+      name: 'accommodation_type_id'
+    })
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('room_types')
+    await queryInterface.dropTable('accommodation_type_translations')
   }
 }

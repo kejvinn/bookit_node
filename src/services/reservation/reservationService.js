@@ -1,15 +1,14 @@
 import ReservationRepository from '../../repositories/reservation/ReservationRepository.js'
 import PropertyRepository from '../../repositories/property/PropertyRepository.js'
-import PriceService from '../property/price/priceService.js'
+import PriceService from '../property/priceService.js'
 import CalendarService from '../property/calendarService.js'
 import ReservationValidationService from './reservationValidationService.js'
 import PaymentService from '../payment/paymentService.js'
 import { AppError } from '../../utils/helpers.js'
-import { HTTP_STATUS } from '../../../config/constants.js'
+import { HTTP_STATUS, RESERVATION_STATUS } from '../../../config/constants.js'
 import { getDateRange } from '../../utils/reservation/dateUtils.js'
 import CouponService from '../coupon/couponService.js'
 import logger from '../../utils/logger.js'
-import { RESERVATION_STATUS } from '../../../config/constants.js'
 
 class ReservationService {
   async createReservation(userId, propertyId, data) {
@@ -43,7 +42,7 @@ class ReservationService {
       user_to: property.user_id,
       property_id: propertyId,
       tracking_code: ReservationRepository.generateTrackingCode(),
-      confirmation_code: null,
+      confirmation_code: ReservationRepository.generateConfirmationCode(),
       checkin: data.checkin,
       checkout: data.checkout,
       guests: data.guests,
