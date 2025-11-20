@@ -46,6 +46,26 @@ class User extends Model {
       foreignKey: 'user_id',
       as: 'wishlistItems'
     })
+
+    User.hasMany(models.Message, {
+      foreignKey: 'user_by',
+      as: 'sentMessages'
+    })
+
+    User.hasMany(models.Message, {
+      foreignKey: 'user_to',
+      as: 'receivedMessages'
+    })
+
+    User.hasMany(models.Conversation, {
+      foreignKey: 'user_by',
+      as: 'startedConversations'
+    })
+
+    User.hasMany(models.Conversation, {
+      foreignKey: 'user_to',
+      as: 'receivedConversations'
+    })
   }
 
   async comparePassword(candidatePassword) {

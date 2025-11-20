@@ -91,6 +91,16 @@ class Property extends Model {
       otherKey: 'wishlist_id',
       as: 'wishlists'
     })
+
+    Property.hasMany(models.Message, {
+      foreignKey: 'property_id',
+      as: 'messages'
+    })
+
+    Property.hasMany(models.Conversation, {
+      foreignKey: 'property_id',
+      as: 'conversations'
+    })
   }
 
   isCompleted() {

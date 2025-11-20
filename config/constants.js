@@ -49,3 +49,11 @@ export const PAYMENT_STATUS = {
   FAILED: 'failed',
   REFUNDED: 'refunded'
 }
+
+export const MESSAGE_TYPES = {
+  CONVERSATION: 'conversation',
+  INQUIRY: 'inquiry',
+  RESERVATION: 'reservation_request',
+  BOOKING_CONFIRMATION: 'booking_confirmation',
+  CANCELLATION_NOTICE: 'cancellation_notice'
+}
