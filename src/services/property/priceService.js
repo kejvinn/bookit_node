@@ -1,12 +1,11 @@
-import PriceRepository from '../../../repositories/property/price/PriceRepository.js'
-import PropertyRepository from '../../../repositories/property/PropertyRepository.js'
-import { pricingUtils } from '../../../utils/property/pricingUtils.js'
-import { AppError } from '../../../utils/helpers.js'
-import { PRICING_LIMITS } from '../../../../config/constants.js'
-import { HTTP_STATUS } from '../../../../config/constants.js'
-import { calculateNights } from '../../../utils/reservation/dateUtils.js'
-import CouponService from '../../coupon/couponService.js'
-import SeasonalPriceRepository from '../../../repositories/property/price/SeasonalPriceRepository.js'
+import PriceRepository from '../../repositories/property/price/PriceRepository.js'
+import PropertyRepository from '../../repositories/property/PropertyRepository.js'
+import { pricingUtils } from '../../utils/property/pricingUtils.js'
+import { AppError } from '../../utils/helpers.js'
+import { PRICING_LIMITS, HTTP_STATUS } from '../../../config/constants.js'
+import { calculateNights } from '../../utils/reservation/dateUtils.js'
+import CouponService from '../coupon/couponService.js'
+import SeasonalPriceRepository from '../../repositories/property/price/SeasonalPriceRepository.js'
 
 class PriceService {
   async updatePricing(propertyId, userId, data) {

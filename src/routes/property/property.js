@@ -8,7 +8,7 @@ import {
   validatePropertyAmenities,
   validatePropertyDescription
 } from '../../middleware/validation/property/description.js'
-import { PhotosController } from '../../controllers/property/photosController.js'
+import { PropertyPhotosController } from '../../controllers/property/propertyPhotosController.js'
 import { cleanupTempFiles, processImages, upload } from '../../middleware/upload.js'
 import { validatePhotoReorder } from '../../middleware/validation/property/photos.js'
 
@@ -40,18 +40,18 @@ router.get('/:id/amenities', authenticate, PropertyController.getPropertyAmeniti
 router.patch('/:id/amenities', authenticate, validatePropertyAmenities, PropertyController.updateAmenities)
 
 // Photos routes
-router.get('/:id/photos', optionalAuth, PhotosController.getPropertyPhotos)
+router.get('/:id/photos', optionalAuth, PropertyPhotosController.getPropertyPhotos)
 router.post(
   '/:id/photos',
   upload.array('photos', 10),
   processImages,
   cleanupTempFiles,
   authenticate,
-  PhotosController.uploadPhotos
+  PropertyPhotosController.uploadPhotos
 )
-router.delete('/:id/photos/:photoId', authenticate, PhotosController.deletePhoto)
-router.patch('/:id/photos/:photoId/featured', authenticate, PhotosController.setFeaturedPhoto)
-router.patch('/:id/photos/reorder', authenticate, validatePhotoReorder, PhotosController.reorderPhotos)
-router.get('/:id/photos/status', authenticate, PhotosController.getPhotoStatus)
+router.delete('/:id/photos/:photoId', authenticate, PropertyPhotosController.deletePhoto)
+router.patch('/:id/photos/:photoId/featured', authenticate, PropertyPhotosController.setFeaturedPhoto)
+router.patch('/:id/photos/reorder', authenticate, validatePhotoReorder, PropertyPhotosController.reorderPhotos)
+router.get('/:id/photos/status', authenticate, PropertyPhotosController.getPhotoStatus)
 
 export default router

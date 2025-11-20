@@ -1,5 +1,5 @@
-import priceService from '../../../services/property/price/priceService.js'
-import { asyncHandler } from '../../../utils/helpers.js'
+import priceService from '../../services/property/priceService.js'
+import { asyncHandler } from '../../utils/helpers.js'
 
 export class PropertyPriceController {
   static updatePricing = asyncHandler(async (req, res) => {
@@ -39,11 +39,7 @@ export class PropertyPriceController {
   })
 
   static updateSeasonalPrice = asyncHandler(async (req, res) => {
-    const seasonalPrice = await priceService.updateSeasonalPrice(
-      req.params.seasonalPriceId,
-      req.user.id,
-      req.body
-    )
+    const seasonalPrice = await priceService.updateSeasonalPrice(req.params.seasonalPriceId, req.user.id, req.body)
 
     res.json({
       success: true,
