@@ -15,6 +15,16 @@ class Reservation extends Model {
       foreignKey: 'property_id',
       as: 'property'
     })
+
+    Reservation.hasMany(models.Message, {
+      foreignKey: 'reservation_id',
+      as: 'messages'
+    })
+
+    Reservation.hasOne(models.Conversation, {
+      foreignKey: 'reservation_id',
+      as: 'conversation'
+    })
   }
 }
 

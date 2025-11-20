@@ -20,6 +20,8 @@ import Reservation from './reservation/Reservation.js'
 import Coupon from './coupon/Coupon.js'
 import Wishlist from './wishlist/Wishlist.js'
 import UserWishlist from './wishlist/UserWishlist.js'
+import Message from './message/Message.js'
+import Conversation from './message/Conversation.js'
 
 const models = {
   User,
@@ -42,7 +44,9 @@ const models = {
   Reservation,
   Coupon,
   Wishlist,
-  UserWishlist
+  UserWishlist,
+  Message,
+  Conversation
 }
 
 // Setup associations
@@ -76,5 +80,7 @@ export {
   Reservation,
   Coupon,
   Wishlist,
-  UserWishlist
+  UserWishlist,
+  Message,
+  Conversation
 }

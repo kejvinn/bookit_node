@@ -17,6 +17,7 @@ class PropertyService {
     })
 
     if (!roomType) {
+      console.log('Invalid room type:', room_type_id)
       throw new AppError('Invalid room type', HTTP_STATUS.BAD_REQUEST)
     }
 
